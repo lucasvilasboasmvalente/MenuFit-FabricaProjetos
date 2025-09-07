@@ -1,4 +1,4 @@
-# Resumo do Projeto — Menu Fit Brasil
+# Menu Fit Brasil
 
 O **Menu Fit Brasil** é um site desenvolvido para recomendar **refeições saudáveis em restaurantes fast food**, auxiliando pessoas que buscam opções mais equilibradas sem abrir mão da praticidade.  
 
