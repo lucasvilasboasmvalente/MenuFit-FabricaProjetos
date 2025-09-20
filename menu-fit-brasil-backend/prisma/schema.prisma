@@ -1,4 +1,5 @@
 // prisma/schema.prisma
+
 datasource db {
   provider = "sqlite"
   url      = "file:./dev.db"
@@ -8,6 +9,7 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Restaurantes e refeições
 model Restaurant {
   id    Int     @id @default(autoincrement())
   name  String
@@ -20,4 +22,60 @@ model Meal {
   calories     Int
   restaurantId Int
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+}
+
+// Usuários
+model User {
+  id            Int            @id @default(autoincrement())
+  name          String
+  email         String         @unique
+  level         Int            @default(1) // nível do usuário
+  medals        Medal[]        // medalhas conquistadas
+  subscriptions Subscription[] // assinaturas e descontos
+  coupons       Coupon[]       @relation("UserCoupons") // cupons aplicados
+}
+
+// Medalhas do usuário
+model Medal {
+  id      Int    @id @default(autoincrement())
+  name    String
+  icon    String? // URL do ícone (opcional)
+  userId  Int
+  user    User   @relation(fields: [userId], references: [id])
+}
+
+// Assinaturas do usuário
+model Subscription {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  price      Float
+  discount   Float?   // desconto aplicado
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+}
+
+// Cupons de desconto
+model Coupon {
+  id          Int      @id @default(autoincrement())
+  code        String   @unique
+  discount    Float
+  validUntil  DateTime
+  users       User[]   @relation("UserCoupons") // relação N:N com usuários
+}
+
+// Nutricionistas e dietas
+model Nutritionist {
+  id      Int    @id @default(autoincrement())
+  name    String
+  email   String @unique
+  diets   Diet[]
+}
+
+model Diet {
+  id              Int           @id @default(autoincrement())
+  title           String
+  description     String?
+  nutritionistId  Int
+  nutritionist    Nutritionist  @relation(fields: [nutritionistId], references: [id])
 }
